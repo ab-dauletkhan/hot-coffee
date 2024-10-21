@@ -9,6 +9,7 @@ func GetAllOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetOrder(w http.ResponseWriter, r *http.Request) {
+	// id := r.PathValue("id")
 }
 
 func PutOrder(w http.ResponseWriter, r *http.Request) {
