@@ -2,5 +2,8 @@ package handler
 
 import "net/http"
 
-func ReportsHandler(w http.ResponseWriter, r *http.Request) {
+func GetReportsTotalSales(w http.ResponseWriter, r *http.Request) {
+}
+
+func GetReportsPopularItems(w http.ResponseWriter, r *http.Request) {
 }
