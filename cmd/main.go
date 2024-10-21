@@ -15,6 +15,6 @@ func main() {
 		Handler: router.Routes(),
 	}
 
-	log.Println("Starting development server at http://localhosts:8080")
+	log.Println("Starting development server at http://localhost:8080")
 	log.Fatal(srv.ListenAndServe())
 }
