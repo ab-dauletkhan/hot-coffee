@@ -8,7 +8,8 @@ import (
 )
 
 func main() {
-	// TODO: Implement "--help"
+	// TODO: Implement flag parsing (e.g. --help, --port)
+	// Exit on invalid flags (e.g., invalid command-line arguments, failure to bind to a port)
 
 	srv := &http.Server{
 		Addr:    ":8080",
