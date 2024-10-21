@@ -2,7 +2,7 @@ format:
 	gofumpt -l -w .
 run:
 	gofumpt -l -w .
-	go run .
+	go run cmd/main.go
 build:
 	gofumpt -l -w .
 	go build -o hot-coffee .
