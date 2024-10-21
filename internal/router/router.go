@@ -1,4 +1,4 @@
-package internal
+package router
 
 import (
 	"net/http"
@@ -29,7 +29,7 @@ func Routes() *http.ServeMux {
 	mux.HandleFunc("GET /inventory", handler.GetAllInventory)
 	mux.HandleFunc("GET /inventory/{id}", handler.GetInventory)
 	mux.HandleFunc("PUT /inventory/{id}", handler.PutInventory)
-	mux.HandleFunc("DELETE /inventory{id}", handler.DeleteInventory)
+	mux.HandleFunc("DELETE /inventory/{id}", handler.DeleteInventory)
 
 	// Aggregation handling
 	mux.HandleFunc("GET /reports/total-sales", handler.GetReportsTotalSales)
