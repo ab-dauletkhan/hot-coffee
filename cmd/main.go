@@ -13,7 +13,6 @@ func main() {
 	http.HandleFunc("/inventory/", handler.InventoryHandler)
 	http.HandleFunc("/reports/", handler.ReportsHandler)
 
-	port := ":8080"
-	log.Printf("Starting development server at http://localhost%s/\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Println("Starting development server at http://localhosts:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
