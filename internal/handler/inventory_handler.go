@@ -1,14 +1,16 @@
 package handler
 
 import (
-	"io"
+	"encoding/json"
 	"net/http"
+
+	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
 func PostInventory(w http.ResponseWriter, r *http.Request) {
-	_, err := io.ReadAll(r.Body)
-	if err != nil {
-		ErrorResponseJSON(w, http.StatusInternalServerError, "Unable to read the provided data.")
+	req := models.InventoryItem{}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		ErrorResponseJSON(w, 400, "Invalid request payload.")
 		return
 	}
 }
