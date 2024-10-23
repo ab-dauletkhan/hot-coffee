@@ -1,0 +1,14 @@
+{"time":"2024-10-23T23:48:05.521686083+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:09.408453646+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:10.254666494+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:10.503029469+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:10.728275097+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:11.006420215+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:11.313265389+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:11.60618237+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:11.853278658+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:12.071040667+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:12.339504905+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:12.619236571+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,{"time":"2024-10-23T23:48:12.944269825+05:00","level":"ERROR","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory?straus=123","status":400,"user_agent":"PostmanRuntime/7.39.1"}
+,
