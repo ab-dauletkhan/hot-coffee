@@ -1,89 +1,49 @@
 package dal
 
 import (
-	"bytes"
-	"context"
-	"io"
-	"log"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
+
+	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
-func SaveJSONLog(r *http.Request, level slog.Level, fields []any, msg string) {
-	file, err := os.OpenFile("data/logs.json", os.O_RDWR|os.O_CREATE, 0o666)
-	if err != nil {
-		slog.Error("Failed to open log file", "error", err)
-		return
-	}
-	defer file.Close()
-
-	fileInfo, err := file.Stat()
-	if err != nil {
-		slog.Error("Failed to get file info", "error", err)
-		return
+func SaveJSONLog(r *http.Request, level slog.Level, msg, path string, code int) {
+	log := models.Log{
+		Time:       time.Now(),
+		Level:      level,
+		Msg:        msg,
+		Method:     r.Method,
+		Proto:      r.Proto,
+		Path:       path,
+		Status:     code,
+		User_agent: r.UserAgent(),
 	}
 
-	if fileInfo.Size() == 0 {
-		_, err := file.Write([]byte("[\n"))
-		if err != nil {
-			slog.Error("Failed to write opening bracket to log file", "error", err)
-			return
-		}
-	} else {
-		content, err := io.ReadAll(file)
-		if err != nil {
-			log.Fatalf("Failed to read file: %v", err)
-		}
-
-		modifiedContent := string(content)
-		if len(modifiedContent) >= 2 {
-			modifiedContent = modifiedContent[:len(modifiedContent)-2]
-		} else {
-			log.Println("File content is too short to truncate")
-			return
-		}
-
-		_, err = file.Seek(0, 0)
-		if err != nil {
-			log.Fatalf("Failed to seek to the beginning of the file: %v", err)
-		}
-
-		_, err = file.WriteString(modifiedContent)
-		if err != nil {
-			log.Fatalf("Failed to write to file: %v", err)
-		}
-
-		err = file.Truncate(int64(len(modifiedContent)))
-		if err != nil {
-			log.Printf("Failed to truncate file: %v", err)
-			return
-		}
-
-		_, err = file.Write([]byte(",\n"))
-		if err != nil {
-			slog.Error("Failed to write comma to log file", "error", err)
-			return
-		}
-	}
-
-	var buf bytes.Buffer
-	logger := slog.New(slog.NewJSONHandler(&buf, nil))
-
-	ctx := context.Background()
-
-	logger.Log(ctx, level, msg, fields...)
-
-	logContent := bytes.TrimSuffix(buf.Bytes(), []byte("\n"))
-	logContent = append([]byte("  "), logContent...)
-	_, err = file.Write(logContent)
+	file, err := os.ReadFile("data/logs.json")
 	if err != nil {
-		slog.Error("Failed to write log content to file", "error", err)
+		slog.Debug("couldn't read from logs.json")
 		return
 	}
 
-	_, err = file.Write([]byte("\n]"))
+	allLogs := []models.Log{}
+	if err := json.Unmarshal(file, &allLogs); err != nil && err != errors.New("unexpected end of JSON input") {
+		slog.Debug(fmt.Sprintf("error: %v", err))
+	}
+
+	allLogs = append(allLogs, log)
+
+	data, err := json.MarshalIndent(allLogs, "  ", "  ")
 	if err != nil {
-		slog.Error("Failed to write closing bracket to log file", "error", err)
+		slog.Debug("couldn't marshall logs")
+		return
+	}
+
+	if err := os.WriteFile("data/logs.json", data, 0o666); err != nil {
+		slog.Debug("couldn't write to logs.json")
 	}
 }

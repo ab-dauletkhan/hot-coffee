@@ -11,7 +11,7 @@ import (
 func CreateLog(r *http.Request, level slog.Level, code int, msg string) {
 	log := slog.New(slog.NewTextHandler(os.Stdout, nil))
 	fields := logCommonFields(r, code)
-	dal.SaveJSONLog(r, level, fields, msg)
+	dal.SaveJSONLog(r, level, msg, getPath(r), code)
 
 	switch level {
 	case slog.LevelInfo:
