@@ -2,7 +2,6 @@ package dal
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -26,21 +25,19 @@ func SaveJSONLog(r *http.Request, level slog.Level, msg, path string, code int) 
 
 	file, err := os.ReadFile("data/logs.json")
 	if err != nil {
-		slog.Debug("couldn't read from logs.json")
-		return
+		slog.Debug(fmt.Sprintf("error reading logs.json: %v", err))
 	}
 
 	allLogs := []models.Log{}
-	if err := json.Unmarshal(file, &allLogs); err != nil && err != errors.New("unexpected end of JSON input") {
-		slog.Debug(fmt.Sprintf("error: %v", err))
+	if err := json.Unmarshal(file, &allLogs); err != nil {
+		slog.Debug(fmt.Sprintf("error unmarshalling log: %v", err))
 	}
 
 	allLogs = append(allLogs, log)
 
 	data, err := json.MarshalIndent(allLogs, "  ", "  ")
 	if err != nil {
-		slog.Debug("couldn't marshall logs")
-		return
+		slog.Debug(fmt.Sprintf("error marshalling log: %v", err))
 	}
 
 	if err := os.WriteFile("data/logs.json", data, 0o666); err != nil {

@@ -1,0 +1,82 @@
+[
+    {
+      "time": "2024-10-24T19:54:58.546704863+05:00",
+      "level": "ERROR",
+      "msg": "invalid request payload",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/menu",
+      "status": 400,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T19:54:59.445491519+05:00",
+      "level": "ERROR",
+      "msg": "invalid request payload",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/menu",
+      "status": 400,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T19:55:05.983819288+05:00",
+      "level": "ERROR",
+      "msg": "invalid request payload",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/menu",
+      "status": 400,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T19:55:08.734068046+05:00",
+      "level": "ERROR",
+      "msg": "invalid request payload",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/menu",
+      "status": 400,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T19:55:09.044685415+05:00",
+      "level": "ERROR",
+      "msg": "invalid request payload",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/menu",
+      "status": 400,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T19:55:09.344990654+05:00",
+      "level": "ERROR",
+      "msg": "invalid request payload",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/menu",
+      "status": 400,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T19:55:09.666455172+05:00",
+      "level": "ERROR",
+      "msg": "invalid request payload",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/menu",
+      "status": 400,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T19:55:09.945009913+05:00",
+      "level": "ERROR",
+      "msg": "invalid request payload",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/menu",
+      "status": 400,
+      "user_agent": "PostmanRuntime/7.39.1"
+    }
+  ]
