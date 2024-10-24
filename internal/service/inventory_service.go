@@ -23,7 +23,7 @@ func SaveInventoryItem(i models.InventoryItem) error {
 		}
 	}
 
-	// TODO: id generation
+	// TODO: id generation & aggregations
 	inventoryItems = append(inventoryItems, i)
 	dal.SaveJSONInventoryItem(inventoryItems)
 	return nil
