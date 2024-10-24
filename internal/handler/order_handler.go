@@ -14,6 +14,7 @@ func CreateOrder(w http.ResponseWriter, r *http.Request) {
 	req := models.Order{}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		handler_utils.ErrorResponseJSON(w, 400, "invalid request payload")
+
 		service.CreateLog(
 			r,
 			slog.LevelError,

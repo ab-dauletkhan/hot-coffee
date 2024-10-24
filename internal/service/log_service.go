@@ -9,11 +9,6 @@ import (
 )
 
 func CreateLog(r *http.Request, level slog.Level, code int, msg string) {
-	path := r.URL.Path
-	if len(r.URL.RawQuery) != 0 {
-		path += "?" + r.URL.RawQuery
-	}
-
 	log := slog.New(slog.NewTextHandler(os.Stdout, nil))
 	fields := logCommonFields(r, code)
 	dal.SaveJSONLog(r, level, fields, msg)
@@ -33,10 +28,7 @@ func CreateLog(r *http.Request, level slog.Level, code int, msg string) {
 }
 
 func logCommonFields(r *http.Request, code int) []any {
-	path := r.URL.Path
-	if len(r.URL.RawQuery) != 0 {
-		path += "?" + r.URL.RawQuery
-	}
+	path := getPath(r)
 
 	return []any{
 		slog.String("method", r.Method),
@@ -45,4 +37,13 @@ func logCommonFields(r *http.Request, code int) []any {
 		slog.Int("status", code),
 		slog.String("user_agent", r.UserAgent()),
 	}
+}
+
+func getPath(r *http.Request) string {
+	path := r.URL.Path
+	if len(r.URL.RawQuery) != 0 {
+		path += "?" + r.URL.RawQuery
+	}
+
+	return path
 }
