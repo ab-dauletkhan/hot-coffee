@@ -11,6 +11,10 @@ import (
 	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
+const (
+	filePerm = 0666
+)
+
 func SaveJSONLog(r *http.Request, level slog.Level, msg, path string, code int) {
 	log := models.Log{
 		Time:       time.Now(),
@@ -40,7 +44,7 @@ func SaveJSONLog(r *http.Request, level slog.Level, msg, path string, code int) 
 		slog.Debug(fmt.Sprintf("error marshalling log: %v", err))
 	}
 
-	if err := os.WriteFile("data/logs.json", data, 0o666); err != nil {
-		slog.Debug("couldn't write to logs.json")
+	if err := os.WriteFile("data/logs.json", data, filePerm); err != nil {
+		slog.Debug(fmt.Sprintf("error writing to logs.json: %v", err))
 	}
 }
