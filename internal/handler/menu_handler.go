@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"log/slog"
 	"net/http"
 
 	"github.com/ab-dauletkhan/hot-coffee/internal/handler/handler_utils"
@@ -13,13 +12,21 @@ import (
 func PostMenu(w http.ResponseWriter, r *http.Request) {
 	req := models.MenuItem{}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		handler_utils.ErrorResponseJSON(w, 400, "invalid request payload")
-		service.CreateLog(
-			r,
-			slog.LevelError,
-			http.StatusBadRequest,
-			"invalid request payload",
-		)
+		handler_utils.ErrorResponseJSON(w, r, 400, "invalid request payload")
+		return
+	}
+
+	// TODO: data validation of req sturct
+
+	menuItems, err := service.GetMenuItemsJSON(r)
+	if err != nil {
+		handler_utils.ErrorResponseJSON(w, r, 500, "internal server error")
+		return
+	}
+
+	menuItems = append(menuItems, req)
+	if err := service.SaveMenuItemsJSON(r, menuItems); err != nil {
+		handler_utils.ErrorResponseJSON(w, r, 500, "internal server error")
 		return
 	}
 }

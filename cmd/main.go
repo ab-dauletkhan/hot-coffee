@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ab-dauletkhan/hot-coffee/internal/router"
+	"github.com/ab-dauletkhan/hot-coffee/internal"
 )
 
 const (
@@ -21,7 +21,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: router.Routes(),
+		Handler: internal.Routes(),
 	}
 
 	// env = 'local' | 'dev' | 'prod'
