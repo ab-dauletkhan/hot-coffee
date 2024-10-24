@@ -13,7 +13,7 @@ func JSONResponse(w http.ResponseWriter, r *http.Request, code int, msg, status 
 		r,
 		slog.LevelError,
 		code,
-		"invalid request payload",
+		msg,
 	)
 
 	w.Header().Set("Content-Type", "application/json")
@@ -23,4 +23,8 @@ func JSONResponse(w http.ResponseWriter, r *http.Request, code int, msg, status 
 	response[status] = msg
 
 	json.NewEncoder(w).Encode(response)
+}
+
+func JSONResponseWithParams() {
+
 }
