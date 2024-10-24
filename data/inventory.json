@@ -28,5 +28,11 @@
       "name": "Sugar",
       "quantity": 5000,
       "unit": "g"
+    },
+    {
+      "ingredient_id": "coconut_milk",
+      "name": "Coconut Milk",
+      "quantity": 300,
+      "unit": "shots"
     }
   ]

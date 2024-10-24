@@ -26,6 +26,8 @@ func PostInventory(w http.ResponseWriter, r *http.Request) {
 		handler_utils.ErrorJSONResponse(w, r, 400, fmt.Sprint(err))
 		return
 	}
+
+	handler_utils.SuccessJSONResponse(w, r, 200, "successfully updated the inventory")
 }
 
 func GetAllInventory(w http.ResponseWriter, r *http.Request) {

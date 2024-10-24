@@ -108,5 +108,35 @@
       "path": "/inventory",
       "status": 400,
       "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T21:38:17.468854309+05:00",
+      "level": "ERROR",
+      "msg": "successfully updated the inventory",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/inventory",
+      "status": 200,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T21:38:20.327276493+05:00",
+      "level": "ERROR",
+      "msg": "successfully updated the inventory",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/inventory",
+      "status": 200,
+      "user_agent": "PostmanRuntime/7.39.1"
+    },
+    {
+      "time": "2024-10-24T21:38:21.180977525+05:00",
+      "level": "ERROR",
+      "msg": "successfully updated the inventory",
+      "method": "POST",
+      "proto": "HTTP/1.1",
+      "path": "/inventory",
+      "status": 200,
+      "user_agent": "PostmanRuntime/7.39.1"
     }
   ]
