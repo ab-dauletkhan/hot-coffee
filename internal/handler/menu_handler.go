@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/ab-dauletkhan/hot-coffee/internal/handler/handler_utils"
-	"github.com/ab-dauletkhan/hot-coffee/internal/service"
 	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
@@ -16,19 +15,8 @@ func PostMenu(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: data validation of req sturct
+	// TODO: data validation of req sturct & saving
 
-	menuItems, err := service.GetMenuItemsJSON(r)
-	if err != nil {
-		handler_utils.ErrorJSONResponse(w, r, 500, "internal server error")
-		return
-	}
-
-	menuItems = append(menuItems, req)
-	if err := service.SaveMenuItemsJSON(r, menuItems); err != nil {
-		handler_utils.ErrorJSONResponse(w, r, 500, "internal server error")
-		return
-	}
 }
 
 func GetAllMenu(w http.ResponseWriter, r *http.Request) {

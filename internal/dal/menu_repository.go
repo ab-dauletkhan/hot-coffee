@@ -2,28 +2,29 @@ package dal
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 
 	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
-func GetMenuItemsJSON(r *http.Request) ([]models.MenuItem, error) {
+func GetJSONMenuItems(r *http.Request) []models.MenuItem {
 	file, err := os.ReadFile("data/menu_items.json")
 	if err != nil {
-		return nil, errors.New("couldn't read 'data/menu_items.json'")
+		slog.Debug(fmt.Sprintf("error reading menu_items.json: %v", err))
 	}
 
 	req := []models.MenuItem{}
 	if err := json.Unmarshal(file, &req); err != nil {
-		return nil, errors.New("couldn't unmarshall menu items")
+		slog.Debug(fmt.Sprintf("error unmarshalling menu items: %v", err))
 	}
 
-	return req, nil
+	return req
 }
 
-// func SaveMenuItemsJSON(r *http.Request, menuItems []models.MenuItem) {
+// func SaveJSONMenuItems(r *http.Request, menuItems []models.MenuItem) {
 // 	data, err := json.MarshalIndent(menuItems, "  ", "  ")
 // 	if err != nil {
 // 		SaveJSONLog(r, slog.LevelDebug, logCommonFields(r, 500), "couldn't read 'data/menu_items.json'")
