@@ -2,9 +2,11 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ab-dauletkhan/hot-coffee/internal/handler/handler_utils"
+	"github.com/ab-dauletkhan/hot-coffee/internal/service"
 	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
@@ -14,6 +16,13 @@ func PostInventory(w http.ResponseWriter, r *http.Request) {
 		handler_utils.ErrorResponseJSON(w, r, 400, "invalid request payload")
 		return
 	}
+
+	if err := req.IsValid(); err != nil {
+		handler_utils.ErrorResponseJSON(w, r, 400, fmt.Sprint(err))
+		return
+	}
+
+	service.SaveInventoryItem()
 }
 
 func GetAllInventory(w http.ResponseWriter, r *http.Request) {
