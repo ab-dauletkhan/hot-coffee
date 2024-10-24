@@ -11,6 +11,7 @@ import (
 )
 
 func PostInventory(w http.ResponseWriter, r *http.Request) {
+	// TODO: Accept arrays of struct: []models.InventoryItem{}
 	req := models.InventoryItem{}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		handler_utils.ErrorJSONResponse(w, r, 400, "invalid request payload")
