@@ -8,7 +8,7 @@ import (
 	"github.com/ab-dauletkhan/hot-coffee/internal/service"
 )
 
-func JSONResponse(w http.ResponseWriter, r *http.Request, code int, msg, status string) {
+func ErrorJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg string) {
 	service.CreateLog(
 		r,
 		slog.LevelError,
@@ -20,11 +20,7 @@ func JSONResponse(w http.ResponseWriter, r *http.Request, code int, msg, status 
 	w.WriteHeader(code)
 
 	response := make(map[string]string)
-	response[status] = msg
+	response["error"] = msg
 
 	json.NewEncoder(w).Encode(response)
-}
-
-func JSONResponseWithParams() {
-
 }

@@ -11,7 +11,7 @@ import (
 func CreateOrder(w http.ResponseWriter, r *http.Request) {
 	req := models.Order{}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		handler_utils.JSONResponse(w, r, 400, "invalid request payload", "error")
+		handler_utils.ErrorJSONResponse(w, r, 400, "invalid request payload")
 		return
 	}
 }

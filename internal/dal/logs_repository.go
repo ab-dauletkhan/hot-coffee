@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	filePerm = 0666
+	filePerm = 0o666
 )
 
 func SaveJSONLog(r *http.Request, level slog.Level, msg, path string, code int) {

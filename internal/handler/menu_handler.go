@@ -12,7 +12,7 @@ import (
 func PostMenu(w http.ResponseWriter, r *http.Request) {
 	req := models.MenuItem{}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		handler_utils.JSONResponse(w, r, 400, "invalid request payload", "error")
+		handler_utils.ErrorJSONResponse(w, r, 400, "invalid request payload")
 		return
 	}
 
@@ -20,13 +20,13 @@ func PostMenu(w http.ResponseWriter, r *http.Request) {
 
 	menuItems, err := service.GetMenuItemsJSON(r)
 	if err != nil {
-		handler_utils.JSONResponse(w, r, 500, "internal server error", "error")
+		handler_utils.ErrorJSONResponse(w, r, 500, "internal server error")
 		return
 	}
 
 	menuItems = append(menuItems, req)
 	if err := service.SaveMenuItemsJSON(r, menuItems); err != nil {
-		handler_utils.JSONResponse(w, r, 500, "internal server error", "error")
+		handler_utils.ErrorJSONResponse(w, r, 500, "internal server error")
 		return
 	}
 }

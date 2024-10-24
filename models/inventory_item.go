@@ -19,7 +19,7 @@ type InventoryItem struct {
 }
 
 func (i *InventoryItem) IsValid() error {
-	if len(i.IngredientID) == 0 || len(i.Name) == 0 || len(i.Unit) == 0 {
+	if len(i.Name) == 0 || len(i.Unit) == 0 || i.Quantity == 0 {
 		return fmt.Errorf("all fields must be filled")
 	}
 
@@ -28,7 +28,7 @@ func (i *InventoryItem) IsValid() error {
 	}
 
 	i.Name = strings.Title(i.Name)
-
+	i.IngredientID = convertToId(i.Name)
 	if !ValidNameRegex.MatchString(i.Name) {
 		return fmt.Errorf("name must contain only letters and a space")
 	}
@@ -38,4 +38,16 @@ func (i *InventoryItem) IsValid() error {
 	}
 
 	return nil
+}
+
+func convertToId(s string) string {
+	result := []byte(strings.ToLower(s))
+
+	for i := range result {
+		if result[i] == ' ' {
+			result[i] = '_'
+		}
+	}
+
+	return string(result)
 }
