@@ -16,7 +16,6 @@ func PostMenu(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: data validation of req sturct & saving
-
 }
 
 func GetAllMenu(w http.ResponseWriter, r *http.Request) {

@@ -7,23 +7,30 @@ import (
 	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
-func SaveInventoryItem(item models.InventoryItem) error {
+func SaveInventoryItem(items *[]models.InventoryItem) error {
 	inventoryItems := dal.GetJSONInventory()
 
-	for i := range inventoryItems {
-		if inventoryItems[i].IngredientID == item.IngredientID {
-			if inventoryItems[i].Unit != item.Unit {
-				return fmt.Errorf("invalid ingredient unit: have (%s) want (%s)",
-					item.Unit, inventoryItems[i].Unit)
-			}
+	for _, item := range *items {
+		notFound := true
 
-			inventoryItems[i].Quantity += item.Quantity
-			dal.SaveJSONInventoryItem(inventoryItems)
-			return nil
+		for i := range inventoryItems {
+			if inventoryItems[i].IngredientID == item.IngredientID {
+				notFound = false
+				if inventoryItems[i].Unit != item.Unit {
+					return fmt.Errorf("%s: invalid ingredient unit: have (%s) want (%s)",
+						item.Name, item.Unit, inventoryItems[i].Unit)
+				}
+
+				inventoryItems[i].Quantity += item.Quantity
+			}
 		}
+
+		if notFound {
+			inventoryItems = append(inventoryItems, item)
+		}
+
 	}
 
-	inventoryItems = append(inventoryItems, item)
 	dal.SaveJSONInventoryItem(inventoryItems)
 	return nil
 }

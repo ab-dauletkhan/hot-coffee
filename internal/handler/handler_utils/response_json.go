@@ -12,26 +12,26 @@ func ErrorJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg str
 	response := make(map[string]string)
 	response["error"] = msg
 
-	writeHeader(w, r, code, msg, response)
+	writeHeader(w, r, slog.LevelError, code, msg, response)
 }
 
 func SuccessJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg string) {
 	response := make(map[string]string)
 	response["success"] = msg
 
-	writeHeader(w, r, code, msg, response)
+	writeHeader(w, r, slog.LevelInfo, code, msg, response)
 }
 
 func CustomJSONREsponse(w http.ResponseWriter, r *http.Request, code int, msg string, key, value interface{}) {
 	response := make(map[interface{}]interface{})
 	response[key] = value
-	writeHeader(w, r, code, msg, response)
+	writeHeader(w, r, slog.LevelDebug, code, msg, response)
 }
 
-func writeHeader(w http.ResponseWriter, r *http.Request, code int, msg string, response interface{}) {
+func writeHeader(w http.ResponseWriter, r *http.Request, level slog.Level, code int, msg string, response interface{}) {
 	service.CreateLog(
 		r,
-		slog.LevelError,
+		level,
 		code,
 		msg,
 	)
