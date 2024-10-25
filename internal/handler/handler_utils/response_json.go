@@ -2,6 +2,7 @@ package handler_utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -21,7 +22,7 @@ func SuccessJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg s
 }
 
 // CustomJSONResponse sends a custom response with a key-value pair or a single value.
-func CustomJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg string, key, value interface{}) {
+func CustomJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg string, key, value interface{}, level slog.Level) {
 	var response interface{}
 
 	if key != nil {
@@ -30,7 +31,7 @@ func CustomJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg st
 		response = value
 	}
 
-	writeResponse(w, r, slog.LevelDebug, code, msg, response)
+	writeResponse(w, r, level, code, msg, response)
 }
 
 // writeResponse logs the response and writes it to the http.ResponseWriter.
@@ -41,7 +42,7 @@ func writeResponse(w http.ResponseWriter, r *http.Request, level slog.Level, cod
 	w.WriteHeader(code)
 
 	if err := json.NewEncoder(w).Encode(response); err != nil {
-		slog.Debug("error encoding JSON response:", err)
+		slog.Debug(fmt.Sprintf("error encoding JSON response: %v", err))
 		http.Error(w, `{"error": "internal server error"}`, http.StatusInternalServerError)
 	}
 }

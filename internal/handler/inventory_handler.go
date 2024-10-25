@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 
 	"github.com/ab-dauletkhan/hot-coffee/internal/dal"
@@ -53,7 +54,7 @@ func GetAllInventory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handler_utils.CustomJSONResponse(w, r, 200, "successful get reponse", nil, JSONItems)
+	handler_utils.CustomJSONResponse(w, r, 200, "successful get reponse", nil, JSONItems, slog.LevelInfo)
 }
 
 func GetInventory(w http.ResponseWriter, r *http.Request) {
