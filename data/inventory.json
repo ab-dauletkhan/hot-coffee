@@ -2,7 +2,7 @@
     {
       "ingredient_id": "espresso_shot",
       "name": "Espresso Shot",
-      "quantity": 7550,
+      "quantity": 7850,
       "unit": "shots"
     },
     {
@@ -39,12 +39,6 @@
       "ingredient_id": "",
       "name": "Coconut Milk",
       "quantity": 4100,
-      "unit": "shots"
-    },
-    {
-      "ingredient_id": "espresso_shots",
-      "name": "Espresso Shots",
-      "quantity": 800,
       "unit": "shots"
     }
   ]

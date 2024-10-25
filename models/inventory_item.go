@@ -1,14 +1,13 @@
 package models
 
 import (
-	"fmt"
+	"errors"
 	"regexp"
 	"strings"
 )
 
 var (
-	ValidNameRegex = regexp.MustCompile(`^[A-Za-z ]+$`)
-	ValidIDRegex   = regexp.MustCompile("^([a-z0-9_]{3,63})$")
+	validNameRegex = regexp.MustCompile(`^[A-Za-z ]+$`)
 )
 
 type InventoryItem struct {
@@ -19,35 +18,42 @@ type InventoryItem struct {
 }
 
 func (i *InventoryItem) IsValid() error {
-	if len(i.Name) == 0 || len(i.Unit) == 0 || i.Quantity == 0 {
-		return fmt.Errorf("all fields must be filled")
+	if err := i.validateFields(); err != nil {
+		return err
 	}
-
-	if i.Quantity < 0 {
-		return fmt.Errorf("quantity cannot be negative")
-	}
-
-	i.Name = strings.Title(i.Name)
-	i.IngredientID = convertToId(i.Name)
-	if !ValidNameRegex.MatchString(i.Name) {
-		return fmt.Errorf("name must contain only letters and a space")
-	}
-
-	if i.Unit != "g" && i.Unit != "ml" && i.Unit != "shots" {
-		return fmt.Errorf("unit can only be in 'ml', 'g', or 'shots'")
-	}
-
+	i.normalizeFields()
 	return nil
 }
 
-func convertToId(s string) string {
-	result := []byte(strings.ToLower(s))
-
-	for i := range result {
-		if result[i] == ' ' {
-			result[i] = '_'
-		}
+func (i *InventoryItem) validateFields() error {
+	if i.Name == "" || i.Unit == "" || i.Quantity == 0 {
+		return errors.New("all fields (name, unit, quantity) must be provided")
 	}
+	if i.Quantity < 0 {
+		return errors.New("quantity cannot be negative")
+	}
+	if !validNameRegex.MatchString(i.Name) {
+		return errors.New("name must contain only letters and spaces")
+	}
+	if !isValidUnit(i.Unit) {
+		return errors.New("unit can only be 'ml', 'g', or 'shots'")
+	}
+	return nil
+}
 
-	return string(result)
+func (i *InventoryItem) normalizeFields() {
+	i.Name = strings.Title(strings.TrimSpace(i.Name))
+	i.IngredientID = generateIDFromName(i.Name)
+}
+
+func isValidUnit(unit string) bool {
+	validUnits := map[string]struct{}{
+		"g": {}, "ml": {}, "shots": {},
+	}
+	_, valid := validUnits[unit]
+	return valid
+}
+
+func generateIDFromName(name string) string {
+	return strings.ReplaceAll(strings.ToLower(strings.TrimSpace(name)), " ", "_")
 }

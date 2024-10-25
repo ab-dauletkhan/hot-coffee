@@ -38,7 +38,7 @@ func PostInventory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := service.SaveInventoryItem(reqBody); err != nil {
-		handler_utils.ErrorJSONResponse(w, r, http.StatusInternalServerError, "failed to save inventory items")
+		handler_utils.ErrorJSONResponse(w, r, http.StatusBadRequest, fmt.Sprint(err))
 		return
 	}
 
