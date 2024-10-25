@@ -7,10 +7,10 @@ import (
 	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
-func SaveInventoryItem(items *[]models.InventoryItem) error {
+func SaveInventoryItem(items []*models.InventoryItem) error {
 	inventoryItems := dal.GetJSONInventory()
 
-	for _, item := range *items {
+	for _, item := range items {
 		notFound := true
 
 		for i := range inventoryItems {
