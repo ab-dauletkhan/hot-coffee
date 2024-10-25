@@ -12,35 +12,37 @@ import (
 )
 
 func PostInventory(w http.ResponseWriter, r *http.Request) {
-	req := []*models.InventoryItem{}
+	var reqBody []*models.InventoryItem
 
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
-		handler_utils.ErrorJSONResponse(w, r, 400, fmt.Sprintf("error reading your request body: %v", err))
+		handler_utils.ErrorJSONResponse(w, r, http.StatusBadRequest, "error reading request body")
 		return
 	}
-	if err := json.Unmarshal(data, &req); err != nil {
-		temp := models.InventoryItem{}
-		if err := json.Unmarshal(data, &temp); err != nil {
-			handler_utils.ErrorJSONResponse(w, r, 400, "invalid request payload")
+	defer r.Body.Close()
+
+	if err := json.Unmarshal(data, &reqBody); err != nil {
+		var singleItem models.InventoryItem
+		if err := json.Unmarshal(data, &singleItem); err != nil {
+			handler_utils.ErrorJSONResponse(w, r, http.StatusBadRequest, "invalid request payload")
 			return
 		}
-		req = []*models.InventoryItem{}
-		req = append(req, &temp)
+		reqBody = []*models.InventoryItem{&singleItem}
 	}
 
-	for _, item := range req {
+	for _, item := range reqBody {
 		if err := item.IsValid(); err != nil {
-			handler_utils.ErrorJSONResponse(w, r, 400, fmt.Sprintf("%s: %v", item.Name, err))
+			handler_utils.ErrorJSONResponse(w, r, http.StatusBadRequest, fmt.Sprintf("%s: %v", item.Name, err))
 			return
 		}
 	}
-	if err := service.SaveInventoryItem(req); err != nil {
-		handler_utils.ErrorJSONResponse(w, r, 400, fmt.Sprint(err))
+
+	if err := service.SaveInventoryItem(reqBody); err != nil {
+		handler_utils.ErrorJSONResponse(w, r, http.StatusInternalServerError, "failed to save inventory items")
 		return
 	}
 
-	handler_utils.SuccessJSONResponse(w, r, 200, "successfully updated the inventory")
+	handler_utils.SuccessJSONResponse(w, r, http.StatusOK, "successfully updated the inventory")
 }
 
 func GetAllInventory(w http.ResponseWriter, r *http.Request) {
