@@ -17,6 +17,6 @@ func SaveJSONLog(r *http.Request, level slog.Level, fields []any, msg string) {
 		slog.Debug(fmt.Sprintf("error opening logs.txt: %v", err))
 	}
 
-	logger := slog.New(slog.NewJSONHandler(file, nil))
+	logger := slog.New(slog.NewJSONHandler(file, &slog.HandlerOptions{Level: level}))
 	logger.Info(msg, fields...)
 }

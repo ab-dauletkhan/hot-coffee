@@ -7,3 +7,8 @@
 {"time":"2024-10-25T18:58:32.36525455+05:00","level":"INFO","msg":"successfully updated the inventory","method":"POST","proto":"HTTP/1.1","path":"/inventory","status":200,"user_agent":"PostmanRuntime/7.39.1"}
 {"time":"2024-10-25T18:58:32.548295563+05:00","level":"INFO","msg":"successfully updated the inventory","method":"POST","proto":"HTTP/1.1","path":"/inventory","status":200,"user_agent":"PostmanRuntime/7.39.1"}
 {"time":"2024-10-25T18:58:32.722103849+05:00","level":"INFO","msg":"successfully updated the inventory","method":"POST","proto":"HTTP/1.1","path":"/inventory","status":200,"user_agent":"PostmanRuntime/7.39.1"}
+{"time":"2024-10-25T19:00:36.998963391+05:00","level":"INFO","msg":"successfully updated the inventory","method":"POST","proto":"HTTP/1.1","path":"/inventory","status":200,"user_agent":"PostmanRuntime/7.39.1"}
+{"time":"2024-10-25T19:00:37.534112515+05:00","level":"INFO","msg":"successfully updated the inventory","method":"POST","proto":"HTTP/1.1","path":"/inventory","status":200,"user_agent":"PostmanRuntime/7.39.1"}
+{"time":"2024-10-25T19:00:37.668612976+05:00","level":"INFO","msg":"successfully updated the inventory","method":"POST","proto":"HTTP/1.1","path":"/inventory","status":200,"user_agent":"PostmanRuntime/7.39.1"}
+{"time":"2024-10-25T19:00:37.844895473+05:00","level":"INFO","msg":"successfully updated the inventory","method":"POST","proto":"HTTP/1.1","path":"/inventory","status":200,"user_agent":"PostmanRuntime/7.39.1"}
+{"time":"2024-10-25T19:01:19.319924247+05:00","level":"INFO","msg":"invalid request payload","method":"POST","proto":"HTTP/1.1","path":"/inventory","status":400,"user_agent":"PostmanRuntime/7.39.1"}
