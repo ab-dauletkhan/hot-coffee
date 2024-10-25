@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/ab-dauletkhan/hot-coffee/internal/dal"
 	"github.com/ab-dauletkhan/hot-coffee/internal/handler/handler_utils"
 	"github.com/ab-dauletkhan/hot-coffee/internal/service"
 	"github.com/ab-dauletkhan/hot-coffee/models"
@@ -46,6 +47,13 @@ func PostInventory(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllInventory(w http.ResponseWriter, r *http.Request) {
+	JSONItems, err := dal.GetJSONInventory()
+	if err != nil {
+		handler_utils.ErrorJSONResponse(w, r, 400, fmt.Sprint(err))
+		return
+	}
+
+	handler_utils.CustomJSONResponse(w, r, 200, "successful get reponse", nil, JSONItems)
 }
 
 func GetInventory(w http.ResponseWriter, r *http.Request) {

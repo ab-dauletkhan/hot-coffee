@@ -9,28 +9,35 @@ import (
 	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
-func GetJSONInventory() []*models.InventoryItem {
-	data, err := os.ReadFile("data/inventory.json")
+const inventoryFilePath = "data/inventory.json"
+
+func GetJSONInventory() ([]*models.InventoryItem, error) {
+	data, err := os.ReadFile(inventoryFilePath)
 	if err != nil {
-		slog.Debug(fmt.Sprintf("error reading inventory.json: %v", err))
+		slog.Debug(fmt.Sprintf("error reading %s: %v", inventoryFilePath, err))
+		return nil, fmt.Errorf("failed to read inventory file: %w", err)
 	}
 
-	inventoryItems := []*models.InventoryItem{}
-
+	var inventoryItems []*models.InventoryItem
 	if err := json.Unmarshal(data, &inventoryItems); err != nil {
-		slog.Debug(fmt.Sprintf("error unmarshalling inventory items: %v", err))
+		slog.Debug(fmt.Sprintf("error unmarshalling inventory data: %v", err))
+		return nil, fmt.Errorf("failed to parse inventory data: %w", err)
 	}
 
-	return inventoryItems
+	return inventoryItems, nil
 }
 
-func SaveJSONInventoryItem(items []*models.InventoryItem) {
-	data, err := json.MarshalIndent(items, "  ", "  ")
+func SaveJSONInventoryItem(items []*models.InventoryItem) error {
+	data, err := json.MarshalIndent(items, "", "  ")
 	if err != nil {
 		slog.Debug(fmt.Sprintf("error marshalling inventory items: %v", err))
+		return fmt.Errorf("failed to save inventory data: %w", err)
 	}
 
-	if err := os.WriteFile("data/inventory.json", data, filePerm); err != nil {
-		slog.Debug(fmt.Sprintf("error writing to inventory.json: %v", err))
+	if err := os.WriteFile(inventoryFilePath, data, filePerm); err != nil {
+		slog.Debug(fmt.Sprintf("error writing to %s: %v", inventoryFilePath, err))
+		return fmt.Errorf("failed to write inventory file: %w", err)
 	}
+
+	return nil
 }

@@ -8,36 +8,40 @@ import (
 	"github.com/ab-dauletkhan/hot-coffee/internal/service"
 )
 
+// ErrorJSONResponse sends an error response with a given status code and message.
 func ErrorJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg string) {
-	response := make(map[string]string)
-	response["error"] = msg
-
-	writeHeader(w, r, slog.LevelError, code, msg, response)
+	response := map[string]string{"error": msg}
+	writeResponse(w, r, slog.LevelError, code, msg, response)
 }
 
+// SuccessJSONResponse sends a success response with a given status code and message.
 func SuccessJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg string) {
-	response := make(map[string]string)
-	response["success"] = msg
-
-	writeHeader(w, r, slog.LevelInfo, code, msg, response)
+	response := map[string]string{"success": msg}
+	writeResponse(w, r, slog.LevelInfo, code, msg, response)
 }
 
-func CustomJSONREsponse(w http.ResponseWriter, r *http.Request, code int, msg string, key, value interface{}) {
-	response := make(map[interface{}]interface{})
-	response[key] = value
-	writeHeader(w, r, slog.LevelDebug, code, msg, response)
+// CustomJSONResponse sends a custom response with a key-value pair or a single value.
+func CustomJSONResponse(w http.ResponseWriter, r *http.Request, code int, msg string, key, value interface{}) {
+	var response interface{}
+
+	if key != nil {
+		response = map[interface{}]interface{}{key: value}
+	} else {
+		response = value
+	}
+
+	writeResponse(w, r, slog.LevelDebug, code, msg, response)
 }
 
-func writeHeader(w http.ResponseWriter, r *http.Request, level slog.Level, code int, msg string, response interface{}) {
-	service.CreateLog(
-		r,
-		level,
-		code,
-		msg,
-	)
+// writeResponse logs the response and writes it to the http.ResponseWriter.
+func writeResponse(w http.ResponseWriter, r *http.Request, level slog.Level, code int, msg string, response interface{}) {
+	service.CreateLog(r, level, code, msg)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 
-	json.NewEncoder(w).Encode(response)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		slog.Debug("error encoding JSON response:", err)
+		http.Error(w, `{"error": "internal server error"}`, http.StatusInternalServerError)
+	}
 }

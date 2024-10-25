@@ -8,7 +8,11 @@ import (
 )
 
 func SaveInventoryItem(items []*models.InventoryItem) error {
-	inventoryItems := dal.GetJSONInventory()
+	inventoryItems, err := dal.GetJSONInventory()
+	if err != nil {
+		return err
+	}
+
 	itemMap := mapInventoryItems(inventoryItems)
 
 	for _, item := range items {

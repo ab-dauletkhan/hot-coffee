@@ -6,9 +6,7 @@ import (
 	"strings"
 )
 
-var (
-	validNameRegex = regexp.MustCompile(`^[A-Za-z ]+$`)
-)
+var validNameRegex = regexp.MustCompile(`^[A-Za-z ]+$`)
 
 type InventoryItem struct {
 	IngredientID string  `json:"ingredient_id"`
