@@ -28,7 +28,6 @@ func PostInventory(w http.ResponseWriter, r *http.Request) {
 		req = []models.InventoryItem{}
 		req = append(req, temp)
 	}
-
 	for _, item := range req {
 		if err := item.IsValid(); err != nil {
 			handler_utils.ErrorJSONResponse(w, r, 400, fmt.Sprintf("%s: %v", item.Name, err))
