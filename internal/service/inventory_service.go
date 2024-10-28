@@ -21,7 +21,11 @@ func SaveInventoryItem(items []*models.InventoryItem) error {
 		}
 	}
 
-	dal.SaveJSONInventoryItem(mapToSlice(itemMap))
+	err = dal.SaveJSONInventoryItem(mapToSlice(itemMap))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

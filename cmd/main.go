@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -7,6 +7,8 @@ import (
 	"os"
 
 	"github.com/ab-dauletkhan/hot-coffee/internal"
+	"github.com/ab-dauletkhan/hot-coffee/internal/core"
+	"github.com/ab-dauletkhan/hot-coffee/internal/util"
 )
 
 const (
@@ -15,25 +17,35 @@ const (
 	envProd  = "prod"
 )
 
-func main() {
-	// TODO: Implement flag parsing (e.g. --help, --port)
-	// Exit on invalid flags (e.g., invalid command-line arguments, failure to bind to a port)
-
-	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: internal.Routes(),
-	}
-
+func Start() {
 	// env = 'local' | 'dev' | 'prod'
 	env := envLocal
 
 	log := setupLogger(env)
 	slog.SetDefault(log)
 
+	err := core.ParseFlags()
+	if err != nil {
+		log.Error(err.Error())
+		os.Exit(1)
+	}
+
+	err = util.InitDir()
+	if err != nil {
+		log.Error(err.Error())
+		os.Exit(1)
+	}
+	log.Info(fmt.Sprintf("working directory: %s", core.Dir))
+
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%d", core.Port),
+		Handler: internal.Routes(),
+	}
+
 	log.Info(
 		"starting http server",
 		slog.String("env", env),
-		slog.String("addr", "http://localhost:8080"),
+		slog.String("addr", fmt.Sprintf("http://127.0.0.1:%d", core.Port)),
 	)
 	log.Debug(fmt.Sprint(srv.ListenAndServe()))
 }
