@@ -8,4 +8,7 @@ const (
 	MenuFile      = "menu_items.json"
 	InventoryFile = "inventory.json"
 	OrderFile     = "order.json"
+
+	// Log file
+	LogFile = "logs.txt"
 )

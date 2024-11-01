@@ -1,6 +1,7 @@
-package dal
+package repository
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -18,5 +19,5 @@ func SaveJSONLog(r *http.Request, level slog.Level, fields []any, msg string) {
 	}
 
 	logger := slog.New(slog.NewJSONHandler(file, &slog.HandlerOptions{Level: slog.LevelDebug}))
-	logger.Log(nil, level, msg, fields...)
+	logger.Log(context.TODO(), level, msg, fields...)
 }

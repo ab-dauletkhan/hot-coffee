@@ -5,23 +5,18 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"path/filepath"
 
-	"github.com/ab-dauletkhan/hot-coffee/internal"
 	"github.com/ab-dauletkhan/hot-coffee/internal/core"
-	"github.com/ab-dauletkhan/hot-coffee/internal/util"
-)
-
-const (
-	envLocal = "local"
-	envDev   = "dev"
-	envProd  = "prod"
+	"github.com/ab-dauletkhan/hot-coffee/internal/handler"
+	"github.com/ab-dauletkhan/hot-coffee/internal/repository"
+	"github.com/ab-dauletkhan/hot-coffee/internal/service"
 )
 
 func Start() {
-	// env = 'local' | 'dev' | 'prod'
-	env := envLocal
+	env := core.EnvLocal
 
-	log := setupLogger(env)
+	log := core.SetupLogger(env)
 	slog.SetDefault(log)
 
 	err := core.ParseFlags()
@@ -30,43 +25,51 @@ func Start() {
 		os.Exit(1)
 	}
 
-	err = util.InitDir()
+	// Initialize storage for each entity
+	orderStore, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.OrderFile))
 	if err != nil {
-		log.Error(err.Error())
+		log.Debug(err.Error())
 		os.Exit(1)
 	}
-	log.Info(fmt.Sprintf("working directory: %s", core.Dir))
+	menuStore, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.MenuFile))
+	if err != nil {
+		log.Debug(err.Error())
+		os.Exit(1)
+	}
+	inventoryStore, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.InventoryFile))
+	if err != nil {
+		log.Debug(err.Error())
+		os.Exit(1)
+	}
+
+	// Initialize repositories with specific storage files
+	orderRepo := repository.NewOrderRepository(orderStore, log)
+	menuRepo := repository.NewMenuRepository(menuStore, log)
+	inventoryRepo := repository.NewInventoryRepository(inventoryStore, log)
+
+	// Initialize services
+	orderService := service.NewOrderService(orderRepo, menuRepo, inventoryRepo, log)
+	menuService := service.NewMenuService(menuRepo, log)
+	inventoryService := service.NewInventoryService(inventoryRepo, log)
+
+	// Initialize handlers
+	orderHandler := handler.NewOrderHandler(orderService, menuService, inventoryService, log)
+	menuHandler := handler.NewMenuHandler(menuService, log)
+	inventoryHandler := handler.NewInventoryHandler(inventoryService, log)
+
+	// Initialize router
+	mux := handler.Routes(orderHandler, menuHandler, inventoryHandler)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", core.Port),
-		Handler: internal.Routes(),
+		Handler: mux,
 	}
 
 	log.Info(
 		"starting http server",
-		slog.String("env", env),
+		slog.String("Env", env),
 		slog.String("addr", fmt.Sprintf("http://127.0.0.1:%d", core.Port)),
+		slog.String("dir", core.Dir),
 	)
 	log.Debug(fmt.Sprint(srv.ListenAndServe()))
-}
-
-func setupLogger(env string) *slog.Logger {
-	var log *slog.Logger
-
-	switch env {
-	case envLocal:
-		log = slog.New(
-			slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}),
-		)
-	case envDev:
-		log = slog.New(
-			slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelError}),
-		)
-	case envProd:
-		log = slog.New(
-			slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}),
-		)
-	}
-
-	return log
 }

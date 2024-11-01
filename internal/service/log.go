@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ab-dauletkhan/hot-coffee/internal/dal"
+	"github.com/ab-dauletkhan/hot-coffee/internal/repository"
 )
 
 func CreateLog(r *http.Request, level slog.Level, code int, msg string) {
 	log := slog.New(slog.NewTextHandler(os.Stdout, nil))
 	fields := logCommonFields(r, code)
-	dal.SaveJSONLog(r, level, fields, msg)
+	repository.SaveJSONLog(r, level, fields, msg)
 
 	switch level {
 	case slog.LevelInfo:

@@ -7,12 +7,25 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/ab-dauletkhan/hot-coffee/internal/dal"
+	"github.com/ab-dauletkhan/hot-coffee/internal/repository"
 	"github.com/ab-dauletkhan/hot-coffee/internal/service"
 	"github.com/ab-dauletkhan/hot-coffee/models"
 )
 
-func PostInventory(w http.ResponseWriter, r *http.Request) {
+// InventoryHandler handles HTTP requests for inventory
+type InventoryHandler struct {
+	inventoryService service.InventoryService
+	log              *slog.Logger
+}
+
+func NewInventoryHandler(inventoryService service.InventoryService, log *slog.Logger) *InventoryHandler {
+	return &InventoryHandler{
+		inventoryService: inventoryService,
+		log:              log,
+	}
+}
+
+func (h InventoryHandler) AddInventoryItem(w http.ResponseWriter, r *http.Request) {
 	var reqBody []*models.InventoryItem
 
 	data, err := io.ReadAll(r.Body)
@@ -23,8 +36,10 @@ func PostInventory(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	if err := json.Unmarshal(data, &reqBody); err != nil {
+		fmt.Println(reqBody)
 		var singleItem models.InventoryItem
 		if err := json.Unmarshal(data, &singleItem); err != nil {
+			fmt.Println(singleItem)
 			ErrorJSONResponse(w, r, http.StatusBadRequest, "invalid request payload")
 			return
 		}
@@ -46,8 +61,8 @@ func PostInventory(w http.ResponseWriter, r *http.Request) {
 	SuccessJSONResponse(w, r, http.StatusOK, "successfully updated the inventory")
 }
 
-func GetAllInventory(w http.ResponseWriter, r *http.Request) {
-	JSONItems, err := dal.GetJSONInventory()
+func (h InventoryHandler) GetAllInventory(w http.ResponseWriter, r *http.Request) {
+	JSONItems, err := repository.GetJSONInventory()
 	if err != nil {
 		ErrorJSONResponse(w, r, 400, fmt.Sprint(err))
 		return
@@ -56,11 +71,11 @@ func GetAllInventory(w http.ResponseWriter, r *http.Request) {
 	CustomJSONResponse(w, r, 200, "successful get reponse", nil, JSONItems, slog.LevelInfo)
 }
 
-func GetInventory(w http.ResponseWriter, r *http.Request) {
+func (h InventoryHandler) GetInventory(w http.ResponseWriter, r *http.Request) {
 }
 
-func PutInventory(w http.ResponseWriter, r *http.Request) {
+func (h InventoryHandler) PutInventory(w http.ResponseWriter, r *http.Request) {
 }
 
-func DeleteInventory(w http.ResponseWriter, r *http.Request) {
+func (h InventoryHandler) DeleteInventory(w http.ResponseWriter, r *http.Request) {
 }
