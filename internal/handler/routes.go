@@ -6,9 +6,9 @@ func Routes(orderHandler *OrderHandler, menuHandler *MenuHandler, inventoryHandl
 	// Setup router (using standard net/http for example)
 	mux := http.NewServeMux()
 
-	// ========================
+	// ================================================
 	// Order routes
-	// ========================
+	// ================================================
 	mux.HandleFunc("/orders", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -39,9 +39,9 @@ func Routes(orderHandler *OrderHandler, menuHandler *MenuHandler, inventoryHandl
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
-	// ========================
+	// ================================================
 	// Menu routes
-	// ========================
+	// ================================================
 	mux.HandleFunc("/menu", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -65,9 +65,9 @@ func Routes(orderHandler *OrderHandler, menuHandler *MenuHandler, inventoryHandl
 		}
 	})
 
-	// ========================
+	// ================================================
 	// Inventory routes
-	// ========================
+	// ================================================
 	mux.HandleFunc("/inventory", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:

@@ -38,21 +38,27 @@ func NewOrderService(orderRepo repository.OrderRepository, menuRepo repository.M
 func (r orderService) CreateOrder(order *models.Order) error {
 	return nil
 }
+
 func (r orderService) GetOrder(id string) (*models.Order, error) {
 	return nil, nil
 }
+
 func (r orderService) GetAllOrders() ([]*models.Order, error) {
 	return nil, nil
 }
+
 func (r orderService) UpdateOrder(order *models.Order) error {
 	return nil
 }
+
 func (r orderService) DeleteOrder(id string) error {
 	return nil
 }
+
 func (r orderService) CloseOrder(id string) error {
 	return nil
 }
+
 func (r orderService) GetTotalSales() (float64, error) {
 	return 0, nil
 }

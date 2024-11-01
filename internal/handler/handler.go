@@ -19,6 +19,6 @@ func writeJSON(w http.ResponseWriter, status int, data interface{}) {
 }
 
 // writeError helper function
-func writeError(w http.ResponseWriter, status int, err error) {
-	writeJSON(w, status, response{Error: err.Error()})
+func writeError(w http.ResponseWriter, status int, err string) {
+	writeJSON(w, status, response{Error: err})
 }

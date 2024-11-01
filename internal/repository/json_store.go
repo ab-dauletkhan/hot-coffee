@@ -100,9 +100,9 @@ func (s *JSONStorage) fileToStruct() interface{} {
 }
 
 // Retrieve reads data from the JSON file and returns it as an interface
-func (s *JSONStorage) Retrieve() (interface{}, error) {
+func (s *JSONStorage) Retrieve(v interface{}) error {
 	if err := s.Init(); err != nil {
-		return nil, err
+		return err
 	}
 
 	s.mu.RLock()
@@ -110,14 +110,10 @@ func (s *JSONStorage) Retrieve() (interface{}, error) {
 
 	content, err := os.ReadFile(s.filePath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read file: %w", err)
+		return fmt.Errorf("failed to read file: %w", err)
 	}
 
-	v := s.fileToStruct()
-	if v == nil {
-		return nil, fmt.Errorf("invalid file type")
-	}
-	return json.Unmarshal(content, v), nil
+	return json.Unmarshal(content, v)
 }
 
 // Save writes data from the provided interface to the JSON file

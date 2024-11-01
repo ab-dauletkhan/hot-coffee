@@ -3,6 +3,7 @@ package core
 import (
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 )
 
@@ -19,6 +20,11 @@ func ParseFlags() error {
 
 	flag.Usage = printUsage
 	flag.Parse()
+
+	if Help {
+		printUsage()
+		os.Exit(0)
+	}
 
 	filepath.Clean(Dir)
 	if Port < 1024 || Port > 49151 {

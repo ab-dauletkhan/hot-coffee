@@ -31,15 +31,19 @@ func NewMenuRepository(storage *JSONStorage, log *slog.Logger) *menuRepository {
 func (r *menuRepository) Create(item *models.MenuItem) error {
 	return nil
 }
+
 func (r *menuRepository) GetByID(id string) (*models.MenuItem, error) {
 	return nil, nil
 }
+
 func (r *menuRepository) GetAll() ([]*models.MenuItem, error) {
 	return nil, nil
 }
+
 func (r *menuRepository) Update(item *models.MenuItem) error {
 	return nil
 }
+
 func (r *menuRepository) Delete(id string) error {
 	return nil
 }

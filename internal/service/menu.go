@@ -33,18 +33,23 @@ func NewMenuService(menuRepo repository.MenuRepository, log *slog.Logger) menuSe
 func (s menuService) CreateMenuItem(item *models.MenuItem) error {
 	return nil
 }
+
 func (s menuService) GetMenuItem(id string) (*models.MenuItem, error) {
 	return nil, nil
 }
+
 func (s menuService) GetAllMenuItems() ([]*models.MenuItem, error) {
 	return nil, nil
 }
+
 func (s menuService) UpdateMenuItem(item *models.MenuItem) error {
 	return nil
 }
+
 func (s menuService) DeleteMenuItem(id string) error {
 	return nil
 }
+
 func (s menuService) GetPopularItems() ([]*models.MenuItem, error) {
 	return nil, nil
 }

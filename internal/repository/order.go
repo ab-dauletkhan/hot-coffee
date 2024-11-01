@@ -40,12 +40,15 @@ func (r *orderRepository) Create(order *models.Order) error {
 func (r *orderRepository) GetByID(id string) (*models.Order, error) {
 	return nil, nil
 }
+
 func (r *orderRepository) GetAll() ([]*models.Order, error) {
 	return nil, nil
 }
+
 func (r *orderRepository) Update(order *models.Order) error {
 	return nil
 }
+
 func (r *orderRepository) Delete(id string) error {
 	return nil
 }
