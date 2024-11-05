@@ -38,11 +38,11 @@ func (i *InventoryItem) validateFields() error {
 	if !validNameRegex.MatchString(i.Name) {
 		return errors.New("name must contain only letters and spaces")
 	}
-	if i.Quantity <= 0 {
-		return errors.New("quantity should be bigger than 0")
+	if i.Quantity < 0 {
+		return errors.New("quantity should not be negative")
 	}
 	if !isValidUnit(i.Unit) {
-		return fmt.Errorf("unit must be one of %v", validUnitsString())
+		return fmt.Errorf("unit must be one of %v", strings.Join(validUnits, ", "))
 	}
 	return nil
 }
@@ -54,24 +54,17 @@ func (i *InventoryItem) normalizeFields() {
 	// i.IngredientID = generateID(i.Name)
 }
 
-func generateID(name string) string {
-	return strings.ToLower(strings.ReplaceAll(name, " ", "_"))
-}
+// func generateID(name string) string {
+// 	return strings.ToLower(strings.ReplaceAll(name, " ", "_"))
+// }
 
-var validUnits = map[string]bool{
-	"g":     true,
-	"ml":    true,
-	"shots": true,
-}
-
-func validUnitsString() string {
-	var units []string
-	for unit := range validUnits {
-		units = append(units, unit)
-	}
-	return strings.Join(units, ", ")
-}
+var validUnits = []string{"g", "ml", "shots"}
 
 func isValidUnit(unit string) bool {
-	return validUnits[strings.ToLower(unit)]
+	for _, u := range validUnits {
+		if u == unit {
+			return true
+		}
+	}
+	return false
 }

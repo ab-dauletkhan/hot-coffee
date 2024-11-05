@@ -1,0 +1,86 @@
+[
+  {
+    "product_id": "menu_espresso",
+    "name": "Espresso",
+    "description": "A strong, bold shot of coffee",
+    "price": 2.5,
+    "ingredients": [
+      {
+        "ingredient_id": "ingredient_espresso_shot",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "product_id": "menu_cappuccino",
+    "name": "Cappuccino",
+    "description": "Espresso with steamed milk foam",
+    "price": 3.5,
+    "ingredients": [
+      {
+        "ingredient_id": "ingredient_espresso_shot",
+        "quantity": 1
+      },
+      {
+        "ingredient_id": "ingredient_steamed_milk",
+        "quantity": 100
+      },
+      {
+        "ingredient_id": "ingredient_milk_foam",
+        "quantity": 50
+      }
+    ]
+  },
+  {
+    "product_id": "menu_chocolate_ice_cream",
+    "name": "Chocolate Ice Cream",
+    "description": "Rich chocolate ice cream",
+    "price": 2.5,
+    "ingredients": [
+      {
+        "ingredient_id": "ingredient_chocolate_syrup",
+        "quantity": 30
+      },
+      {
+        "ingredient_id": "ingredient_whole_milk",
+        "quantity": 150
+      }
+    ]
+  },
+  {
+    "product_id": "menu_vanilla_milkshake",
+    "name": "Vanilla Milkshake",
+    "description": "Creamy milkshake with vanilla flavor",
+    "price": 4,
+    "ingredients": [
+      {
+        "ingredient_id": "ingredient_vanilla_ice_cream",
+        "quantity": 200
+      },
+      {
+        "ingredient_id": "ingredient_whole_milk",
+        "quantity": 150
+      },
+      {
+        "ingredient_id": "ingredient_vanilla_syrup",
+        "quantity": 20
+      }
+    ]
+  },
+  {
+    "product_id": "menu_latte",
+    "name": "Latte",
+    "description": "Smooth espresso with steamed milk",
+    "price": 3.75,
+    "ingredients": [
+      {
+        "ingredient_id": "ingredient_espresso_shot",
+        "quantity": 1
+      },
+      {
+        "ingredient_id": "ingredient_steamed_milk",
+        "quantity": 150
+      }
+    ]
+  }
+]

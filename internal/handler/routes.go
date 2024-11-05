@@ -71,7 +71,7 @@ func Routes(orderHandler *OrderHandler, menuHandler *MenuHandler, inventoryHandl
 	mux.HandleFunc("/inventory", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
-			inventoryHandler.AddInventoryItem(w, r)
+			inventoryHandler.AddInventoryItems(w, r)
 		case http.MethodGet:
 			inventoryHandler.GetAllInventory(w, r)
 		default:

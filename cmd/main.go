@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -14,48 +15,50 @@ import (
 )
 
 func Start() {
-	env := core.EnvLocal
+	err := core.ParseFlags()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	log := core.SetupLogger(env)
+	log := core.SetupLogger(core.Env)
 	slog.SetDefault(log)
 
-	err := core.ParseFlags()
+	log.Info("application started",
+		"version", "1.0.0",
+		"environment", core.Env,
+	)
+
+	// Initialize storage for each entity
+	inventoryStorage, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.InventoryFile))
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
 	}
-
-	// Initialize storage for each entity
-	orderStore, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.OrderFile))
+	menuStorage, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.MenuFile))
 	if err != nil {
-		log.Debug(err.Error())
+		log.Error(err.Error())
 		os.Exit(1)
 	}
-	menuStore, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.MenuFile))
-	if err != nil {
-		log.Debug(err.Error())
-		os.Exit(1)
-	}
-	inventoryStore, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.InventoryFile))
+	orderStorage, err := repository.NewJSONStorage(filepath.Join(core.Dir, core.OrderFile))
 	if err != nil {
 		log.Debug(err.Error())
 		os.Exit(1)
 	}
 
 	// Initialize repositories with specific storage files
-	orderRepo := repository.NewOrderRepository(orderStore, log)
-	menuRepo := repository.NewMenuRepository(menuStore, log)
-	inventoryRepo := repository.NewInventoryRepository(inventoryStore, log)
+	inventoryRepo := repository.NewInventoryRepository(inventoryStorage, log)
+	menuRepo := repository.NewMenuRepository(menuStorage, log)
+	orderRepo := repository.NewOrderRepository(orderStorage, log)
 
 	// Initialize services
-	orderService := service.NewOrderService(orderRepo, menuRepo, inventoryRepo, log)
-	menuService := service.NewMenuService(menuRepo, log)
 	inventoryService := service.NewInventoryService(inventoryRepo, log)
+	menuService := service.NewMenuService(menuRepo, inventoryService, log)
+	orderService := service.NewOrderService(orderRepo, menuService, inventoryService, log)
 
 	// Initialize handlers
-	orderHandler := handler.NewOrderHandler(orderService, menuService, inventoryService, log)
-	menuHandler := handler.NewMenuHandler(menuService, log)
 	inventoryHandler := handler.NewInventoryHandler(inventoryService, log)
+	menuHandler := handler.NewMenuHandler(menuService, log)
+	orderHandler := handler.NewOrderHandler(orderService, menuService, inventoryService, log)
 
 	// Initialize router
 	mux := handler.Routes(orderHandler, menuHandler, inventoryHandler)
@@ -67,7 +70,7 @@ func Start() {
 
 	log.Info(
 		"starting http server",
-		slog.String("Env", env),
+		slog.String("Env", core.Env),
 		slog.String("addr", fmt.Sprintf("http://127.0.0.1:%d", core.Port)),
 		slog.String("dir", core.Dir),
 	)

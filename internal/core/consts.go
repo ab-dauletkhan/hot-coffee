@@ -9,6 +9,11 @@ const (
 	InventoryFile = "inventory.json"
 	OrderFile     = "order.json"
 
+	// Environments
+	EnvLocal = "local"
+	EnvDev   = "dev"
+	EnvProd  = "prod"
+
 	// Log file
-	LogFile = "logs.txt"
+	LogFile = "logs.log"
 )

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -24,44 +25,8 @@ func NewInventoryHandler(inventoryService service.InventoryService, log *slog.Lo
 	}
 }
 
-// func (h InventoryHandler) AddInventoryItem(w http.ResponseWriter, r *http.Request) {
-// 	h.log.Info("AddInventoryItem called")
-
-// 	data, err := io.ReadAll(r.Body)
-// 	if err != nil {
-// 		writeError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
-// 		return
-// 	}
-// 	defer r.Body.Close()
-
-// 	var items []*models.InventoryItem
-// 	if err := json.Unmarshal(data, &items); err != nil {
-// 		// if the request body is a single item, unmarshal it into a single item
-// 		var item models.InventoryItem
-// 		if err := json.Unmarshal(data, &item); err != nil {
-// 			writeError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
-// 			return
-// 		}
-// 		items = []*models.InventoryItem{&item}
-// 	}
-
-// 	for _, item := range items {
-// 		if err := item.IsValid(); err != nil {
-// 			writeError(w, http.StatusBadRequest, fmt.Sprintf("%s: %v", item.Name, err))
-// 			return
-// 		}
-// 	}
-
-// 	if err := service.CreateInventoryItems(items); err != nil {
-// 		writeError(w, r, http.StatusBadRequest, fmt.Sprint(err))
-// 		return
-// 	}
-
-// 	SuccessJSONResponse(w, r, http.StatusOK, "successfully updated the inventory")
-// }
-
-func (h InventoryHandler) AddInventoryItem(w http.ResponseWriter, r *http.Request) {
-	h.log.Info("AddInventoryItem called")
+func (h InventoryHandler) AddInventoryItems(w http.ResponseWriter, r *http.Request) {
+	h.log.Info("AddInventoryItems called")
 
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -71,27 +36,66 @@ func (h InventoryHandler) AddInventoryItem(w http.ResponseWriter, r *http.Reques
 	}
 	defer r.Body.Close()
 
-	var item models.InventoryItem
-	if err := json.Unmarshal(data, &item); err != nil {
-		h.log.Error(fmt.Sprintf("error unmarshalling request body: %v", err))
-		writeError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+	// Try to unmarshal into a single item first
+	var singleItem models.InventoryItem
+	if err := json.Unmarshal(data, &singleItem); err == nil {
+		// If successful, handle single item addition
+		h.handleSingleInventoryItem(singleItem, w)
 		return
 	}
 
+	// Otherwise, try to unmarshal into an array of items
+	var items []models.InventoryItem
+	if err := json.Unmarshal(data, &items); err != nil {
+		h.log.Error(fmt.Sprintf("error unmarshalling request body: %v", err))
+		writeError(w, http.StatusBadRequest, "Invalid format: expected single or multiple inventory items")
+		return
+	}
+
+	// Handle multiple items
+	h.handleMultipleInventoryItems(items, w)
+}
+
+// Private helper to handle single inventory item addition
+func (h InventoryHandler) handleSingleInventoryItem(item models.InventoryItem, w http.ResponseWriter) {
+	h.log.Info("handling single inventory item")
+
 	if err := item.IsValid(); err != nil {
-		h.log.Error(fmt.Sprintf("invalid item: %v", err))
+		h.log.Error(fmt.Sprintf("invalid inventory item: %v", err))
 		writeError(w, http.StatusBadRequest, fmt.Sprintf("%s: %v", item.Name, err))
 		return
 	}
 
-	err = h.inventoryService.CreateInventoryItem(&item)
-	if err != nil {
-		h.log.Error(fmt.Sprintf("error creating inventory item: %v", err))
-		writeError(w, http.StatusBadRequest, fmt.Sprint(err))
+	if err := h.inventoryService.CreateInventoryItem(&item); err != nil {
+		h.log.Error(fmt.Sprintf("error creating single inventory item: %v", err))
+		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	h.log.Info(fmt.Sprintf("created inventory item: %v", item))
+
+	h.log.Info("successfully created single inventory item")
 	writeJSON(w, http.StatusCreated, item)
+}
+
+// Private helper to handle multiple inventory items addition
+func (h InventoryHandler) handleMultipleInventoryItems(items []models.InventoryItem, w http.ResponseWriter) {
+	h.log.Info("handling multiple inventory items")
+
+	for _, item := range items {
+		if err := item.IsValid(); err != nil {
+			h.log.Error(fmt.Sprintf("invalid inventory item: %v", err))
+			writeError(w, http.StatusBadRequest, fmt.Sprintf("Item %s: %v", item.Name, err))
+			return
+		}
+	}
+
+	if err := h.inventoryService.CreateInventoryItems(&items); err != nil {
+		h.log.Error(fmt.Sprintf("error creating multiple inventory items: %v", err))
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	h.log.Info("successfully created multiple inventory items")
+	writeJSON(w, http.StatusCreated, items)
 }
 
 func (h InventoryHandler) GetAllInventory(w http.ResponseWriter, r *http.Request) {
@@ -114,14 +118,14 @@ func (h InventoryHandler) GetInventory(w http.ResponseWriter, r *http.Request) {
 
 	item, err := h.inventoryService.GetInventoryItem(id)
 	if err != nil {
+		if errors.Is(err, service.ErrInventoryItemNotFound) {
+			h.log.Error(fmt.Sprintf("item not found: %s", id))
+			writeError(w, http.StatusNotFound, fmt.Sprintf("item not found: %s", id))
+			return
+		}
+
 		h.log.Error(fmt.Sprintf("error getting inventory item: %v", err))
 		writeError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
-		return
-	}
-
-	if item == nil {
-		h.log.Error(fmt.Sprintf("item not found: %s", id))
-		writeError(w, http.StatusNotFound, fmt.Sprintf("item not found: %s", id))
 		return
 	}
 
@@ -163,7 +167,7 @@ func (h InventoryHandler) PutInventory(w http.ResponseWriter, r *http.Request) {
 
 	err = h.inventoryService.UpdateInventoryItem(id, &item)
 	if err != nil {
-		if h.inventoryService.IsNotFoundError(err) {
+		if errors.Is(err, service.ErrInventoryItemNotFound) {
 			h.log.Error(fmt.Sprintf("item not found: %s", id))
 			writeError(w, http.StatusNotFound, fmt.Sprintf("item not found: %s", id))
 			return
@@ -185,7 +189,7 @@ func (h InventoryHandler) DeleteInventory(w http.ResponseWriter, r *http.Request
 
 	err := h.inventoryService.DeleteInventoryItem(id)
 	if err != nil {
-		if h.inventoryService.IsNotFoundError(err) {
+		if errors.Is(err, service.ErrInventoryItemNotFound) {
 			h.log.Error(fmt.Sprintf("item not found: %s", id))
 			writeError(w, http.StatusNotFound, fmt.Sprintf("item not found: %s", id))
 			return

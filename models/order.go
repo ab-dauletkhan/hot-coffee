@@ -7,7 +7,7 @@ import (
 )
 
 type Order struct {
-	ID           string      `json:"order_id"`
+	ID           string      `json:"order_id,omitempty"`
 	CustomerName string      `json:"customer_name"`
 	Items        []OrderItem `json:"items"`
 	Status       string      `json:"status"`
@@ -19,8 +19,10 @@ type OrderItem struct {
 	Quantity  int    `json:"quantity"`
 }
 
+var ErrItemNotAvailable = errors.New("ingridient not available")
+
 var validStatus = map[string]bool{
-	"pending": true, "completed": true, "canceled": true,
+	"pending": true, "completed": true,
 }
 
 var validTimestampRegex = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$`)
@@ -34,9 +36,12 @@ func (o *Order) IsValid() error {
 }
 
 func (o *Order) validateFields() error {
-	if o.ID == "" || !validIngredientID.MatchString(o.ID) {
-		return errors.New("order_id must be non-empty and alphanumeric with underscores only")
+	if o.ID != "" {
+		return errors.New("order_id must not be provided")
 	}
+	// if o.ID == "" || !validIngredientID.MatchString(o.ID) {
+	// 	return errors.New("order_id must be non-empty and alphanumeric with underscores only")
+	// }
 	if o.CustomerName == "" || !validNameRegex.MatchString(o.CustomerName) {
 		return errors.New("customer_name must contain only letters and spaces")
 	}
