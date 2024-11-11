@@ -47,7 +47,7 @@ func (s inventoryService) CreateInventoryItems(items *[]models.InventoryItem) er
 
 	for i := range *items {
 		if err := s.CreateInventoryItem(&(*items)[i]); err != nil {
-			return fmt.Errorf("failed to create item at index %d: %w", i, err)
+			return fmt.Errorf("failed to create item with id %s: %w", (*items)[i].IngredientID, err)
 		}
 	}
 	return nil

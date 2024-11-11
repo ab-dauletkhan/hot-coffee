@@ -54,7 +54,7 @@ func (m *MenuItem) normalizeFields() {
 }
 
 func (mi *MenuItemIngredient) IsValid() error {
-	if mi.IngredientID == "" || !validIngredientID.MatchString(mi.IngredientID) {
+	if mi.IngredientID == "" {
 		return errors.New("ingredient_id must be non-empty and alphanumeric with underscores only")
 	}
 	if mi.Quantity <= 0 {

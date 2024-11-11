@@ -66,7 +66,8 @@ func (h MenuHandler) handleSingleMenuItem(item models.MenuItem, w http.ResponseW
 	}
 
 	if err := h.menuService.CreateMenuItem(&item); err != nil {
-		if errors.Is(err, service.ErrInventoryItemExists) {
+		h.log.Error(err.Error())
+		if errors.Is(err, service.ErrMenuItemAlreadyExists) {
 			h.log.Error(fmt.Sprintf("menu item already exists: %v", item))
 			writeError(w, http.StatusConflict, "Menu item already exists")
 			return
@@ -92,7 +93,7 @@ func (h MenuHandler) handleMultipleMenuItems(items []models.MenuItem, w http.Res
 	}
 
 	if errItem, err := h.menuService.CreateMenuItems(&items); err != nil {
-		if errors.Is(err, service.ErrInventoryItemExists) {
+		if errors.Is(err, service.ErrMenuItemAlreadyExists) {
 			h.log.Error(fmt.Sprintf("some menu item already exists: %v", errItem))
 			writeError(w, http.StatusConflict, fmt.Sprintf("%s already exists", errItem.Name))
 			return

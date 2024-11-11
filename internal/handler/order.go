@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -53,19 +54,39 @@ func (h *OrderHandler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	// Validate order
 	if err := order.IsValid(); err != nil {
 		h.log.Error(fmt.Sprintf("invalid order: %v", err))
-		writeError(w, http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
+		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	// Send order to order service
-	if err := h.orderService.CreateOrder(&order); err != nil {
+	order, err = h.orderService.CreateOrder(&order)
+	if err != nil {
 		h.log.Error(fmt.Sprintf("error creating order: %v", err))
-		writeError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	h.log.Info(fmt.Sprintf("order created: %v", order))
 	writeJSON(w, http.StatusCreated, order)
+}
+
+func (h *OrderHandler) CloseOrder(w http.ResponseWriter, r *http.Request) {
+	h.log.Info("CloseOrder called")
+
+	id := r.PathValue("id")
+	if err := h.orderService.CloseOrder(id); err != nil {
+		if errors.Is(err, service.ErrOrderNotFound) {
+			h.log.Error(fmt.Sprintf("order not found: %s", id))
+			writeError(w, http.StatusNotFound, fmt.Sprintf("order not found: %s", id))
+			return
+		}
+		h.log.Error(fmt.Sprintf("error closing order: %v", err))
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	h.log.Info(fmt.Sprintf("order closed: %s", id))
+	writeJSON(w, http.StatusOK, response{Data: fmt.Sprintf("order closed: %s", id)})
 }
 
 func (h *OrderHandler) GetAllOrders(w http.ResponseWriter, r *http.Request) {
@@ -154,18 +175,4 @@ func (h *OrderHandler) DeleteOrder(w http.ResponseWriter, r *http.Request) {
 
 	h.log.Info(fmt.Sprintf("order deleted: %s", id))
 	writeJSON(w, http.StatusOK, response{Data: fmt.Sprintf("order deleted: %s", id)})
-}
-
-func (h *OrderHandler) CloseOrder(w http.ResponseWriter, r *http.Request) {
-	h.log.Info("CloseOrder called")
-
-	id := r.PathValue("id")
-	if err := h.orderService.CloseOrder(id); err != nil {
-		h.log.Error(fmt.Sprintf("error closing order: %v", err))
-		writeError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
-		return
-	}
-
-	h.log.Info(fmt.Sprintf("order closed: %s", id))
-	writeJSON(w, http.StatusOK, response{Data: fmt.Sprintf("order closed: %s", id)})
 }

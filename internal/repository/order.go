@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"errors"
 	"fmt"
 	"log/slog"
 
@@ -22,13 +21,6 @@ type orderRepository struct {
 	storage *JSONStorage
 	log     *slog.Logger
 }
-
-var (
-	ErrOrderNotFound  = errors.New("order not found")
-	ErrOrderExists    = errors.New("order already exists")
-	ErrOrderClosed    = errors.New("order is already closed")
-	ErrOrderNotClosed = errors.New("order is not closed")
-)
 
 // NewOrderRepository initializes an OrderRepository with storage and logging
 func NewOrderRepository(storage *JSONStorage, log *slog.Logger) *orderRepository {
@@ -90,7 +82,7 @@ func (r *orderRepository) GetByID(id string) (*models.Order, error) {
 		}
 	}
 
-	return nil, ErrOrderNotFound
+	return nil, nil
 }
 
 func (r *orderRepository) GetAll() (*[]models.Order, error) {
@@ -114,17 +106,11 @@ func (r *orderRepository) Update(order *models.Order) error {
 		return err
 	}
 
-	found := false
 	for i := range *orders {
 		if (*orders)[i].ID == order.ID {
 			(*orders)[i] = *order
-			found = true
 			break
 		}
-	}
-
-	if !found {
-		return ErrOrderNotFound
 	}
 
 	if err := r.saveOrders(orders); err != nil {
@@ -150,17 +136,16 @@ func (r *orderRepository) Delete(id string) error {
 			lastIdx := len(*orders) - 1
 			(*orders)[i] = (*orders)[lastIdx]
 			*orders = (*orders)[:lastIdx]
-
-			if err := r.saveOrders(orders); err != nil {
-				r.log.Error("failed to save orders after deletion", "error", err, "order_id", id)
-				return err
-			}
-
-			return nil
+			break
 		}
 	}
 
-	return ErrOrderNotFound
+	if err := r.saveOrders(orders); err != nil {
+		r.log.Error("failed to save orders after deletion", "error", err, "order_id", id)
+		return err
+	}
+
+	return nil
 }
 
 func (r *orderRepository) Close(id string) error {
@@ -175,15 +160,13 @@ func (r *orderRepository) Close(id string) error {
 	for i := range *orders {
 		if (*orders)[i].ID == id {
 			(*orders)[i].Status = "closed"
-
-			if err := r.saveOrders(orders); err != nil {
-				r.log.Error("failed to save orders after closing", "error", err, "order_id", id)
-				return err
-			}
-
-			return nil
+			break
 		}
 	}
 
-	return ErrOrderNotFound
+	if err := r.saveOrders(orders); err != nil {
+		r.log.Error("failed to save orders after closing", "error", err, "order_id", id)
+		return err
+	}
+	return nil
 }

@@ -1,44 +1,26 @@
 [
-    {
-        "ingredient_id": "ingredient_espresso_shot",
-        "name": "Espresso Shot",
-        "quantity": 100,
-        "unit": "shots"
-    },
-    {
-        "ingredient_id": "ingredient_steamed_milk",
-        "name": "Steamed Milk",
-        "quantity": 5000,
-        "unit": "ml"
-    },
-    {
-        "ingredient_id": "ingredient_milk_foam",
-        "name": "Milk Foam",
-        "quantity": 2000,
-        "unit": "ml"
-    },
-    {
-        "ingredient_id": "ingredient_vanilla_ice_cream",
-        "name": "Vanilla Ice Cream",
-        "quantity": 3000,
-        "unit": "g"
-    },
-    {
-        "ingredient_id": "ingredient_whole_milk",
-        "name": "Whole Milk",
-        "quantity": 5000,
-        "unit": "ml"
-    },
-    {
-        "ingredient_id": "ingredient_vanilla_syrup",
-        "name": "Vanilla Syrup",
-        "quantity": 500,
-        "unit": "ml"
-    },
-    {
-        "ingredient_id": "ingredient_chocolate_syrup",
-        "name": "Chocolate Syrup",
-        "quantity": 500,
-        "unit": "ml"
-    }
+  {
+    "ingredient_id": "water",
+    "name": "Water",
+    "quantity": 600,
+    "unit": "ml"
+  },
+  {
+    "ingredient_id": "coffee",
+    "name": "Coffee",
+    "quantity": 8,
+    "unit": "shots"
+  },
+  {
+    "ingredient_id": "milk",
+    "name": "Milk",
+    "quantity": 2000,
+    "unit": "ml"
+  },
+  {
+    "ingredient_id": "sugar",
+    "name": "Sugar",
+    "quantity": 300,
+    "unit": "g"
+  }
 ]

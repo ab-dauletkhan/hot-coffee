@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"regexp"
 	"strings"
 )
 
@@ -10,8 +9,8 @@ type Order struct {
 	ID           string      `json:"order_id,omitempty"`
 	CustomerName string      `json:"customer_name"`
 	Items        []OrderItem `json:"items"`
-	Status       string      `json:"status"`
-	CreatedAt    string      `json:"created_at"`
+	Status       string      `json:"status,omitempty"`
+	CreatedAt    string      `json:"created_at,omitempty"`
 }
 
 type OrderItem struct {
@@ -19,13 +18,12 @@ type OrderItem struct {
 	Quantity  int    `json:"quantity"`
 }
 
-var ErrItemNotAvailable = errors.New("ingridient not available")
+var (
+	ErrItemNotAvailable = errors.New("ingridient not available")
 
-var validStatus = map[string]bool{
-	"pending": true, "completed": true,
-}
-
-var validTimestampRegex = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$`)
+	StatusPending   = "pending"
+	StatusCompleted = "closed"
+)
 
 func (o *Order) IsValid() error {
 	if err := o.validateFields(); err != nil {
@@ -39,17 +37,8 @@ func (o *Order) validateFields() error {
 	if o.ID != "" {
 		return errors.New("order_id must not be provided")
 	}
-	// if o.ID == "" || !validIngredientID.MatchString(o.ID) {
-	// 	return errors.New("order_id must be non-empty and alphanumeric with underscores only")
-	// }
 	if o.CustomerName == "" || !validNameRegex.MatchString(o.CustomerName) {
 		return errors.New("customer_name must contain only letters and spaces")
-	}
-	if valid := validStatus[o.Status]; !valid {
-		return errors.New("status must be one of 'pending', 'completed', or 'canceled'")
-	}
-	if !validTimestampRegex.MatchString(o.CreatedAt) {
-		return errors.New("created_at must be a valid ISO8601 timestamp")
 	}
 	for _, item := range o.Items {
 		if err := item.IsValid(); err != nil {
