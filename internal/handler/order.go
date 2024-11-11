@@ -176,3 +176,31 @@ func (h *OrderHandler) DeleteOrder(w http.ResponseWriter, r *http.Request) {
 	h.log.Info(fmt.Sprintf("order deleted: %s", id))
 	writeJSON(w, http.StatusOK, response{Data: fmt.Sprintf("order deleted: %s", id)})
 }
+
+func (h *OrderHandler) GetTotalSales(w http.ResponseWriter, r *http.Request) {
+	h.log.Info("GetTotalSales called")
+
+	report, err := h.orderService.GetTotalSales()
+	if err != nil {
+		h.log.Error(fmt.Sprintf("error deleting order: %v", err))
+		writeError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	h.log.Info("Total Sales: ", report)
+	writeJSON(w, http.StatusOK, report)
+}
+
+func (h *OrderHandler) PopularItems(w http.ResponseWriter, r *http.Request) {
+	h.log.Info("PopularItems called")
+
+	report, err := h.orderService.PopularItems()
+	if err != nil {
+		h.log.Error(fmt.Sprintf("error deleting order: %v", err))
+		writeError(w, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
+		return
+	}
+
+	h.log.Info("Popular Items: ", report)
+	writeJSON(w, http.StatusOK, report)
+}

@@ -19,6 +19,8 @@ type MenuService interface {
 
 	IsMenuAvailable(id string, quantity int) (bool, error)
 	PrepareMenu(id string, quantity int) error
+
+	GetPriceByID(id string) (float64, error)
 }
 
 var (
@@ -206,4 +208,12 @@ func (s menuService) PrepareMenu(id string, quantity int) error {
 	}
 
 	return nil
+}
+
+func (s menuService) GetPriceByID(id string) (float64, error) {
+	menuItem, err := s.menuRepo.GetByID(id)
+	if err != nil {
+		return 0, err
+	}
+	return menuItem.Price, nil
 }

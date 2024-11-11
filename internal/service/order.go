@@ -20,6 +20,9 @@ type OrderService interface {
 	CloseOrder(id string) error
 
 	NewOrderID(name string) string
+
+	GetTotalSales() (*models.Sales, error)
+	PopularItems() (*models.PopularItems, error)
 }
 
 // OrderService handles business logic for orders
@@ -165,4 +168,61 @@ func (r orderService) DeleteOrder(id string) error {
 
 func (r orderService) NewOrderID(name string) string {
 	return fmt.Sprintf("order-%s-%d", name, time.Now().Unix())
+}
+
+func (r orderService) GetTotalSales() (*models.Sales, error) {
+	orders, err := r.orderRepo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var totalRevenue float64
+	var totalItemsSold int
+
+	for _, order := range *orders {
+		for _, item := range order.Items {
+			// Assuming we have a method to get the price of a product by its ID
+			price, err := r.menuService.GetPriceByID(item.ProductID)
+			if err != nil {
+				// Handle error appropriately
+				continue
+			}
+			totalRevenue += price * float64(item.Quantity)
+			totalItemsSold += item.Quantity
+		}
+	}
+
+	return &models.Sales{
+		TotalRevenue:   totalRevenue,
+		TotalItemsSold: totalItemsSold,
+		TimeReceived:   time.Now().Format(time.RFC3339),
+	}, nil
+}
+
+func (r orderService) PopularItems() (*models.PopularItems, error) {
+	orders, err := r.orderRepo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	itemCount := make(map[string]int)
+
+	for _, order := range *orders {
+		for _, item := range order.Items {
+			itemCount[item.ProductID] += item.Quantity
+		}
+	}
+
+	var popularItems []models.MenuItem
+	for productID := range itemCount {
+		menuItem, err := r.menuService.GetMenuItem(productID)
+		if err != nil {
+			return nil, err
+		}
+		popularItems = append(popularItems, *menuItem)
+	}
+
+	return &models.PopularItems{
+		List: popularItems,
+	}, nil
 }

@@ -2,13 +2,13 @@
   {
     "ingredient_id": "water",
     "name": "Water",
-    "quantity": 600,
+    "quantity": 0,
     "unit": "ml"
   },
   {
     "ingredient_id": "coffee",
     "name": "Coffee",
-    "quantity": 8,
+    "quantity": 5,
     "unit": "shots"
   },
   {

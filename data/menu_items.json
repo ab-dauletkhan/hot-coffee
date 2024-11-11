@@ -3,7 +3,7 @@
     "product_id": "americano",
     "name": "Americano",
     "description": "A rich and bold coffee made by diluting espresso with hot water, resulting in a smooth and flavorful drink.",
-    "price": 12.99,
+    "price": 9.99,
     "ingredients": [
       {
         "ingredient_id": "water",

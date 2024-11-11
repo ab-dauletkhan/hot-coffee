@@ -90,5 +90,17 @@ func Routes(orderHandler *OrderHandler, menuHandler *MenuHandler, inventoryHandl
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
+	mux.HandleFunc("/reports/total-sales", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+		orderHandler.GetTotalSales(w, r)
+	})
+	mux.HandleFunc("/reports/popular-items", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+		orderHandler.PopularItems(w, r)
+	})
 	return mux
 }
