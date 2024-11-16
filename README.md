@@ -31,41 +31,41 @@ Hot-Coffee is a REST API-based management system that handles:
 
 ### System Architecture
 
- .
-├──  cmd
-│   └──  main.go
-├──  go.mod
-├──  internal
-│   ├──  core
-│   │   ├──  consts.go
-│   │   ├──  flag.go
-│   │   └──  slog.go
-│   ├──  handler
-│   │   ├──  handler.go
-│   │   ├──  inventory.go
-│   │   ├──  menu.go
-│   │   ├──  order.go
-│   │   ├──  report.go
-│   │   └──  routes.go
-│   ├──  repository
-│   │   ├──  inventory.go
-│   │   ├──  json_store.go
-│   │   ├──  menu.go
-│   │   ├──  order.go
-│   │   └──  report.go
-│   └──  service
-│       ├──  inventory.go
-│       ├──  menu.go
-│       ├──  order.go
-│       └──  report.go
-├──  main.go
-├──  Makefile
-├──  models
-│   ├──  inventory.go
-│   ├──  menu.go
-│   ├──  order.go
-│   └──  report.go
-└──  README.md
+.
+├── cmd
+│   └── main.go
+├── go.mod
+├── internal
+│   ├── core
+│   │   ├── consts.go
+│   │   ├── flag.go
+│   │   └── slog.go
+│   ├── handler
+│   │   ├── handler.go
+│   │   ├── inventory.go
+│   │   ├── menu.go
+│   │   ├── order.go
+│   │   ├── report.go
+│   │   └── routes.go
+│   ├── repository
+│   │   ├── inventory.go
+│   │   ├── json_store.go
+│   │   ├── menu.go
+│   │   ├── order.go
+│   │   └── report.go
+│   └── service
+│       ├── inventory.go
+│       ├── menu.go
+│       ├── order.go
+│       └── report.go
+├── main.go
+├── Makefile
+├── models
+│   ├── inventory.go
+│   ├── menu.go
+│   ├── order.go
+│   └── report.go
+└── README.md
 ```
 
 ### API Endpoints
