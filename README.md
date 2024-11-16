@@ -30,7 +30,7 @@ Hot-Coffee is a REST API-based management system that handles:
 - Structured error handling with appropriate HTTP status codes
 
 ### System Architecture
-
+```
 .
 ├── cmd
 │   └── main.go
